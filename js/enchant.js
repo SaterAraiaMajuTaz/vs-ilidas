@@ -86,9 +86,7 @@ window.getTime = (function() {
     }
 }());
 
-// dojo 削除 2019-07-21 ///////////////////////////////////////////////////
 
-/*
 // define requestAnimationFrame
 window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -106,7 +104,7 @@ window.requestAnimationFrame =
             return _id;
         };
     }());
-*/
+
 ////////////////////////////////////////////////////////////////////
 
 /**
@@ -970,8 +968,6 @@ enchant.EventTarget = enchant.Class.create({
             this._surfaceID = 0;
             this._soundID = 0;
 
-// dojo 追加 2019-07-21 ////////////////////////////////////
-
 			this._fps = 0;
 
 /////////////////////////////////////////////////
@@ -1554,9 +1550,7 @@ enchant.EventTarget = enchant.Class.create({
          * @param {Number} delay Amount of time to delay before calling requestAnimationFrame.
          * @private
          */
-
-// dojo 削除 2019-07-21 //////////////////////////////////////////////////////
-/*
+         
         _requestNextFrame: function(delay) {
             if (!this.ready) {
                 return;
@@ -1572,10 +1566,9 @@ enchant.EventTarget = enchant.Class.create({
                 }, Math.max(0, delay));
             }
         },
-*/
+
 ///////////////////////////////////////////////////////////////////
 
-// dojo 追加 2019-07-21 ///////////////////////////////////////////////////////
 
 		_requestNextFrame: function() {
 
