@@ -22,7 +22,7 @@ var label_HP_ilidas_flying;
 
 var label_HP_player;
 
-var music;
+var music = new Bgm();
 var se01;
 var se02;
 var se03;
