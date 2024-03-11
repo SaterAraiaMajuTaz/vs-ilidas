@@ -86,7 +86,6 @@ window.getTime = (function() {
     }
 }());
 
-
 // define requestAnimationFrame
 window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -95,7 +94,10 @@ window.requestAnimationFrame =
     window.msRequestAnimationFrame ||
     (function() {
         var lastTime = window.getTime();
-        var frame = 1000 / 60;
+//        var frame = 1000 / 60;
+		// ESHENTIA修正 2021/03/06 /////////////////
+		var frame = 1000/ this.fps;
+		/////////////////////////////
         return function(func) {
             var _id = setTimeout(function() {
                 lastTime = window.getTime();
@@ -104,8 +106,6 @@ window.requestAnimationFrame =
             return _id;
         };
     }());
-
-////////////////////////////////////////////////////////////////////
 
 /**
  * Export the library classes globally.
@@ -968,10 +968,6 @@ enchant.EventTarget = enchant.Class.create({
             this._surfaceID = 0;
             this._soundID = 0;
 
-			this._fps = 0;
-
-/////////////////////////////////////////////////
-
             this._scenes = [];
 
             width = width || 320;
@@ -1550,7 +1546,7 @@ enchant.EventTarget = enchant.Class.create({
          * @param {Number} delay Amount of time to delay before calling requestAnimationFrame.
          * @private
          */
-         
+
         _requestNextFrame: function(delay) {
             if (!this.ready) {
                 return;
@@ -1567,46 +1563,17 @@ enchant.EventTarget = enchant.Class.create({
             }
         },
 
-///////////////////////////////////////////////////////////////////
-
-
-		_requestNextFrame: function() {
-
-            if (!this.ready) {
-                return;
-            }
-            this._calledTime = window.getTime();
-            window.requestAnimationFrame(this._callTick);
-        },
-
-////////////////////////////////////////////////////////////////////
-
         /**
          * Calls {@link enchant.Core#_tick}.
          * @param {Number} time
          * @private
          */
+// ESHENTIA 削除 2021/03/06 /////////////////////////////////////////////////////////
+/*
         _callTick: function(time) {
          enchant.Core.instance._tick(time);
 	    },
         _tick: function(time) {
-
-// dojo 追記 2019-07-21 //////////////////////////////////////////////////////
-
-
-			this._fps++;
-
-			var fps = 60 / this.fps;
-
-			if(this._fps % fps == 0){
-
-				this._requestNextFrame(0);
-
-				return;
-
-			}
-
-/////////////////////////////////////////////////////////////////////
 
             var e = new enchant.Event('enterframe');
             var now = window.getTime();
@@ -1637,6 +1604,75 @@ enchant.EventTarget = enchant.Class.create({
             this._requestNextFrame(1000 / this.fps - (now - this._calledTime));
 
         },
+*/
+/////////////////////////////////////////////////////////////////////////////////
+// ESHENTIA 修正 2021/03/06  ////////////////////////////////////////////////////////
+        _callTick: function(time) {
+         enchant.Core.instance._tick(time);
+	    },
+        _tick: function(time) {
+
+            var e = new enchant.Event('enterframe');
+            var now = window.getTime();
+            var elapsed = e.elapsed = now - this.currentTime;
+
+			if(this.fps >= 60){
+		        this.currentTime = now;
+
+	            this._actualFps = elapsed > 0 ? (1000 / elapsed) : 0;
+
+	            var nodes = this.currentScene.childNodes.slice();
+	            var push = Array.prototype.push;
+	            while (nodes.length) {
+	                var node = nodes.pop();
+	                node.age++;
+	                node.dispatchEvent(e);
+	                if (node.childNodes) {
+	                    push.apply(nodes, node.childNodes);
+	                }
+	            }
+
+	            this.currentScene.age++;
+	            this.currentScene.dispatchEvent(e);
+	            this.dispatchEvent(e);
+
+	            this.dispatchEvent(new enchant.Event('exitframe'));
+	            this.frame++;
+	            now = window.getTime();
+
+			}
+
+			else{
+				if(elapsed >= (this.fps - 1) * 0.97){
+			        this.currentTime = now;
+
+		            this._actualFps = elapsed > 0 ? (1000 / elapsed) : 0;
+
+		            var nodes = this.currentScene.childNodes.slice();
+		            var push = Array.prototype.push;
+		            while (nodes.length) {
+		                var node = nodes.pop();
+		                node.age++;
+		                node.dispatchEvent(e);
+		                if (node.childNodes) {
+		                    push.apply(nodes, node.childNodes);
+		                }
+		            }
+
+		            this.currentScene.age++;
+		            this.currentScene.dispatchEvent(e);
+		            this.dispatchEvent(e);
+
+		            this.dispatchEvent(new enchant.Event('exitframe'));
+		            this.frame++;
+		            now = window.getTime();
+				}
+			}
+
+            window.requestAnimationFrame(this._callTick);
+
+        },
+/////////////////////////////////////////////////////////////////////////////////
 
         getTime: function() {
             return window.getTime();
@@ -3146,7 +3182,7 @@ enchant.Label = enchant.Class.create(enchant.Entity, {
 
         this.text = text || '';
         this.width = 300;
-        this.font = '14px Gothic';
+        this.font = '14px meiryo';
         this.textAlign = 'left';
 
         this._debugColor = '#ff0000';
