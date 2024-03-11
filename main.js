@@ -22,7 +22,7 @@ var label_HP_ilidas_flying;
 
 var label_HP_player;
 
-var music = new Bgm();
+//var music;
 var se01;
 var se02;
 var se03;
@@ -553,16 +553,16 @@ Pause = Class.create(Scene, {
 		bgm_frame++;
 	//	debug(bgm_frame);
 		if(bgm_loop_start == false && bgm_frame > 755){
-				music.stop();
+				//music.stop();
 				bgm_loop_start = true;
-				music = Sound.load("./musics/illidas-1.mp3");
-				music.play();
+				//music = Sound.load("./musics/illidas-1.mp3");
+				//music.play();
 			}
 			if(bgm_loop_start == true && (bgm_frame-755) % (5900-755) == 0){
-				music.stop();
+				//music.stop();
 				bgm_loop_start = true;
-				music = Sound.load("./musics/illidas-1.mp3");
-				music.play();
+				//music = Sound.load("./musics/illidas-1.mp3");
+				//music.play();
 			}
 		this.pop();
 		
@@ -623,22 +623,22 @@ window.onload = function(){
 			//BGM再生
 			if(bgm_start_flag == false){
 				bgm_start_flag = true;
-				music = Sound.load("./musics/ilidas-2.mp3");
-				music.play();
+				//music = Sound.load("./musics/ilidas-2.mp3");
+				//music.play();
 				bgm_frame = 0;
 			}
 	//		debug(bgm_frame);
 			if(bgm_loop_start == false && bgm_frame > 755){
-				music.stop();
+				//music.stop();
 				bgm_loop_start = true;
-				music = Sound.load("./musics/illidas-1.mp3");
-				music.play();
-			}255
+				//music = Sound.load("./musics/illidas-1.mp3");
+				//music.play();
+			}
 			if(bgm_loop_start == true && (bgm_frame-755) % (5900-755) == 0){
-				music.stop();
+				//music.stop();
 				bgm_loop_start = true;
-				music = Sound.load("./musics/illidas-1.mp3");
-				music.play();
+				//music = Sound.load("./musics/illidas-1.mp3");
+				//music.play();
 			}
 			
 			//ilidas_flyingが存在しているときの動作/////////////////////////
